@@ -1,0 +1,16 @@
+**secrets.tf
+**.terraform
+**.pyc
+directory/client_secrets.json
+directory/directory.html
+directory/*.xlsx
+sync/dist/**
+directory/images/**
+**/build/**
+*.whl
+**/*.egg-info/*
+**/*.png=
+**.p12
+*.csv
+*.txt
+.DS_Store
