@@ -106,6 +106,8 @@ resource "azurerm_linux_virtual_machine" "test1-vm" {
   admin_username        = "adminuser"
   network_interface_ids = [azurerm_network_interface.test1-nic.id]
 
+  custom_data = filebase64("customdata.tpl")
+
   admin_ssh_key {
     username   = "adminuser"
     public_key = file("~/.ssh/test1_azure_key.pub")
@@ -121,5 +123,16 @@ resource "azurerm_linux_virtual_machine" "test1-vm" {
     offer     = "UbuntuServer"
     sku       = "18.04-LTS"
     version   = "latest"
-  } 
+  }
+
+  provisioner "local-exec" {
+    command = templatefile("mac-ssh-script.tpl", {
+      hostname     = self.public_ip_address,
+      user         = "adminuser"
+      identityfile = "~/.ssh/test1_azure_key"
+    })
+    interpreter = [
+      "bash", "-c"
+    ]
+  }
 }
