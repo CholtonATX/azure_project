@@ -14,3 +14,6 @@ directory/images/**
 *.csv
 *.txt
 .DS_Store
+*.tfstate*
+*.hcl
+*.tfvars    
