@@ -55,7 +55,6 @@ resource "azurerm_network_security_rule" "test1-test-rule" {
   protocol                    = "*"
   source_port_range           = "*"
   destination_port_range      = "*"
-  # source_address_prefix       = "24.227.217.186/32"
   source_address_prefix       = "*"
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.test1-rg.name
@@ -132,7 +131,7 @@ resource "azurerm_linux_virtual_machine" "test1-vm" {
       user         = "adminuser"
       identityfile = "~/.ssh/test1_azure_key"
     })
-    interpreter = var.host_os == "linux" ? ["Powershell", "-Command"] : ["bash", "-c"]
+    interpreter = var.host_os == "mac" ? ["Powershell", "-Command"] : ["bash", "-c"]
   }
 }
 
