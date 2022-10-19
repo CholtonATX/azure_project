@@ -55,7 +55,8 @@ resource "azurerm_network_security_rule" "test1-test-rule" {
   protocol                    = "*"
   source_port_range           = "*"
   destination_port_range      = "*"
-  source_address_prefix       = "24.227.217.186/32"
+  # source_address_prefix       = "24.227.217.186/32"
+  source_address_prefix       = "*"
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.test1-rg.name
   network_security_group_name = azurerm_network_security_group.test1-sg.name
@@ -126,13 +127,20 @@ resource "azurerm_linux_virtual_machine" "test1-vm" {
   }
 
   provisioner "local-exec" {
-    command = templatefile("mac-ssh-script.tpl", {
+    command = templatefile("${var.host_os}-ssh-script.tpl", {
       hostname     = self.public_ip_address,
       user         = "adminuser"
       identityfile = "~/.ssh/test1_azure_key"
     })
-    interpreter = [
-      "bash", "-c"
-    ]
+    interpreter = var.host_os == "linux" ? ["Powershell", "-Command"] : ["bash", "-c"]
   }
+}
+
+data "azurerm_public_ip" "test1-vm-ip_data" {
+  name = azurerm_public_ip.test1-ip.name
+  resource_group_name = azurerm_resource_group.test1-rg.name
+}
+
+output "public_ip_address" {
+  value = "${azurerm_linux_virtual_machine.test1-vm.name}: ${data.azurerm_public_ip.test1-vm-ip_data.ip_address}"
 }

@@ -16,3 +16,4 @@ directory/images/**
 .DS_Store
 *.tfstate*
 *.hcl
+*.tfvars
